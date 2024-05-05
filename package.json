@@ -17,13 +17,14 @@
   },
   "main": "index.js",
   "scripts": {
+    "start": "tsx src/server.ts",
+    "start:dev": "tsx watch src/server.ts",
+    "commit": "cz",
     "husky:prepare": "husky install",
     "lint": "eslint .",
     "lint:fix": "eslint --fix",
-    "commit": "cz",
-    "start": "tsx src/server.ts",
-    "start:dev": "tsx watch src/server.ts",
-    "format": "prettier --check ."
+    "prettier:check": "prettier --check .",
+    "prettier:format": "prettier --write ."
   },
   "keywords": [],
   "author": "",
