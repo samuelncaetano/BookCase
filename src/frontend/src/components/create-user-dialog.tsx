@@ -5,6 +5,8 @@ import { Label } from "./ui/label";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { createUser, User } from "@/data/users";
 
 const createUserSchema = z.object({
   name: z.string(),
@@ -14,12 +16,39 @@ const createUserSchema = z.object({
 type CreateUserSchema = z.infer<typeof createUserSchema>;
 
 export function CreateUserDialog() {
+  const queryClient = useQueryClient();
+
   const { register, handleSubmit } = useForm<CreateUserSchema>({
     resolver: zodResolver(createUserSchema),
   });
 
-  function handleCreateUser(data: CreateUserSchema) {
-    console.log(data);
+  const { mutateAsync: createUserFn } = useMutation({
+    mutationFn: createUser,
+    onSuccess(_, Variable) {
+      const data = queryClient.getQueryData<User[]>(["users"]) || [];
+      queryClient.setQueryData<User[]>(
+        ["users"],
+        [
+          ...data,
+          {
+            id: crypto.randomUUID(),
+            name: Variable.name, // Substitua 'Variable.name' pelo valor adequado
+            age: Variable.age, // Substitua 'Variable.age' pelo valor adequado
+          },
+        ],
+      );
+    },
+  });
+
+  async function handleCreateUser(data: CreateUserSchema) {
+    try {
+      await createUserFn({
+        name: data.name,
+        age: data.age,
+      });
+    } catch (err) {
+      alert("Erro ao cadastrar usuário");
+    }
   }
 
   return (
@@ -48,7 +77,9 @@ export function CreateUserDialog() {
               Cancelar
             </Button>
           </d.DialogClose>
-          <Button type="submit">Salvar</Button>
+          <d.DialogClose asChild>
+            <Button type="submit">Salvar</Button>
+          </d.DialogClose>
         </d.DialogFooter>
       </form>
     </d.DialogContent>

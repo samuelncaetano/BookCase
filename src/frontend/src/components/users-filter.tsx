@@ -4,6 +4,7 @@ import { Input } from "./ui/input";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useSearchParams } from "react-router-dom";
 
 const usersFiltersSchema = z.object({
   id: z.string(),
@@ -13,12 +14,31 @@ const usersFiltersSchema = z.object({
 type UsersFiltersSchema = z.infer<typeof usersFiltersSchema>;
 
 export function UsersFilters() {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const id = searchParams.get("id");
+  const name = searchParams.get("name");
+
   const { register, handleSubmit } = useForm<UsersFiltersSchema>({
     resolver: zodResolver(usersFiltersSchema),
+    values: { id: id ?? "", name: name ?? "" },
   });
 
-  function handleFilterUsers(data: UsersFiltersSchema) {
-    console.log(data);
+  function handleFilterUsers({ id, name }: UsersFiltersSchema) {
+    setSearchParams((slate) => {
+      if (id) {
+        slate.set("id", id);
+      } else {
+        slate.delete("id");
+      }
+
+      if (name) {
+        slate.set("name", name);
+      } else {
+        slate.delete("name");
+      }
+
+      return slate;
+    });
   }
 
   return (
