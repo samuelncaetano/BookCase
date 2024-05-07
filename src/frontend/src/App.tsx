@@ -1,9 +1,9 @@
 import * as t from "./components/ui/table";
 import * as d from "./components/ui/dialog";
 import { Button } from "./components/ui/button";
-import { Input } from "./components/ui/input";
-import { Label } from "./components/ui/label";
-import { Search, PlusCircle } from "lucide-react";
+import { PlusCircle } from "lucide-react";
+import { UsersFilters } from "./components/users-filter";
+import { CreateUserDialog } from "./components/create-user-dialog";
 
 export function App() {
   return (
@@ -11,14 +11,7 @@ export function App() {
       <h1 className="text-3xl font-bold">Usuários</h1>
 
       <div className="flex items-center justify-between">
-        <form className="flex items-center gap-2">
-          <Input name="id" placeholder="ID do usuário" />
-          <Input name="name" placeholder="Nome do usuário" />
-          <Button type="submit" variant="link">
-            <Search className="w-4 h-4 mr-2" />
-            Filtrar usuário
-          </Button>
-        </form>
+        <UsersFilters />
 
         <d.Dialog>
           <d.DialogTrigger asChild>
@@ -28,35 +21,7 @@ export function App() {
             </Button>
           </d.DialogTrigger>
 
-          <d.DialogContent>
-            <d.DialogHeader>
-              <d.DialogTitle>Novo usuário</d.DialogTitle>
-              <d.DialogDescription>
-                Criar um novo usuário no sistema
-              </d.DialogDescription>
-            </d.DialogHeader>
-
-            <form className="space-y-6">
-              <div className="grid grid-cols-4 items-center text-right gap-2">
-                <Label htmlFor="name">Usuário</Label>
-                <Input className="col-span-3" id="name" />
-              </div>
-
-              <div className="grid grid-cols-4 items-center text-right gap-2">
-                <Label htmlFor="age">Idade</Label>
-                <Input className="col-span-3" id="age" />
-              </div>
-
-              <d.DialogFooter>
-                <d.DialogClose asChild>
-                  <Button type="button" variant="outline">
-                    Cancelar
-                  </Button>
-                </d.DialogClose>
-                <Button type="submit">Salvar</Button>
-              </d.DialogFooter>
-            </form>
-          </d.DialogContent>
+          <CreateUserDialog />
         </d.Dialog>
       </div>
 
